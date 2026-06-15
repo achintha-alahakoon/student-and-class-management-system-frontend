@@ -1,0 +1,98 @@
+.role-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.register-container {
+  background-color: #ffffff;
+  border-radius: 10px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.register-form h1 {
+  color: #27374d;
+  margin-top: 30px;
+  margin-left: 20px;
+  padding-top: 20px;
+}
+
+.register-container h6, h4 {
+  color: #27374d;
+  margin-left: 5px;
+}
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+.student-form {
+  justify-content: center;
+  align-items: center;
+}
+.register-form input[type="text"],
+.register-form input[type="password"],
+.register-form input[type="email"],
+.register-form input[type="date"],
+.register-form input[type="tel"],
+.register-form select {
+  width: 300px;
+}
+
+.register-btn {
+  margin: 10px;
+  width: 100px;
+  font-size: 16px;
+  border-radius: 10px;
+  background-color: #dde6ed;
+  border-color: #dde6ed;
+  font-weight: bold;
+  color: #27374d;
+}
+
+.reset-btn {
+  width: 100px;
+  background-color: #ffffff;
+  color: #27374d;
+  font-weight: bold;
+  border-color: #27374d;
+}
+
+.reset-btn:hover {
+  background-color: #dde6ed;
+  border-color: #dde6ed;
+  color: #27374d;
+  transition: 0.5s ease-in-out;
+}
+.register-btn:hover {
+  background-color: #27374d;
+  border-color: #27374d;
+  color: #ffffff;
+  transition: 0.5s ease-in-out;
+}
+.custom-tabs .MuiTabs-indicator {
+  background-color: #27374d;
+}
+
+.custom-tabs .MuiTab-root {
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+  text-transform: none;
+}
+
+.custom-tabs .MuiTab-root:hover {
+  color: #27374d;
+  background-color: #dde6ed;
+}
+
+.custom-tabs .Mui-selected {
+  color: #27374d;
+  font-weight: 600;
+}
+.two-col {
+  display: flex;
+  justify-content: space-between;
+  width: 700px;
+}

@@ -1,0 +1,495 @@
+.content {
+  width: 100%;
+}
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-title {
+  color: #526d82;
+}
+.header-activity {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  background: #dde6ed;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 5px;
+}
+.search-box .icon {
+  color: #969393;
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+}
+
+.list-search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 5px;
+}
+.list-search-box .icon {
+  color: #969393;
+  font-size: 22px;
+  cursor: pointer;
+  transition: 0.5s ease-in-out;
+}
+.notification {
+  background: #dde6ed;
+  padding: 12px;
+  border-radius: 10px;
+  color: #969393;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.notification .icon {
+  font-size: 20px;
+  transition: 0.5s ease-in-out;
+}
+.icon:hover {
+  transform: scale(1.3);
+  cursor: pointer;
+}
+
+
+.admin-dashboard-container {
+  display: flex;
+  gap: 20px;
+}
+.card-content {
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  width: 70%;
+  margin-top: 2rem;
+}
+.profile-content {
+  flex: 1;
+}
+.card-container {
+  display: flex;
+  gap: 20px;
+}
+.card {
+  height: 180px;
+  background: #dde6ed;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  transition: 0.5s ease-in-out;
+}
+.card:hover {
+  transform: scale(1.04);
+  cursor: pointer;
+}
+.card-cover {
+  width: 70px;
+  height: 70px;
+  font-size: 3rem;
+  border-radius: 20px;
+  padding: 20px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #969393;
+}
+.card-title {
+  color: #526d82;
+  font-size: 14px;
+  background: #ffffffc0;
+  width: 100%;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 10px;
+}
+.card.selected {
+  background-color: #27374d;
+  color: white;
+}
+.assign-btn {
+  background: #526d82;
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  width: 100%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.4s ease-in-out
+}
+.assign-btn:hover {
+  transform: scale(1.04);
+  cursor: pointer;
+  background: #27374d;
+}
+
+/* Add class */
+.addclass-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  
+}
+.displayclass-content {
+  margin-top: 1rem;
+  width: 35%;
+}
+.check-availability {
+  display: flex;
+  justify-content: flex-end;
+}
+.check-availability-btn {
+  background: #526d82;
+  padding: 10px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  width: 160px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.4s ease-in-out
+}
+.check-availability-btn:hover {
+  transform: scale(1.04);
+  cursor: pointer;
+  background: #27374d;
+}
+
+.add-class {
+  background: #dde6ed;
+  padding: 20px;
+  border-radius: 10px;
+}
+h2 {
+  color: #526d82;
+}
+.form-content {
+  margin-top: 1rem;
+}
+
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+}
+
+.form-column,
+ .form-column2 {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+  margin-bottom: 10px;
+  flex-direction: column;
+}
+
+.form-column label {
+  color: #526d82;
+  justify-content: space-between;
+  align-items: center;
+}
+.form-column2 label {
+  color: #526d82;
+  justify-content: space-between;
+  align-items: center;
+}
+.form-column input {
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 10px; /* Example border-radius */
+}
+.form-column2 input {
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 10px; /* Example border-radius */
+}
+.form-column select {
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 10px; /* Example border-radius */
+}
+.form-column2 select {
+  margin-bottom: 10px;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 10px; /* Example border-radius */
+}
+.addclass-btn {
+  text-align: center;
+}
+
+button[type="submit"],
+button[type="reset"] {
+  padding: 10px 20px;
+  background-color: #526d82; 
+  color: #fff;
+  border: none; 
+  border-radius: 10px;
+  cursor: pointer;
+  width: 130px;
+}
+
+button[type="submit"]:hover,
+button[type="reset"]:hover {
+  
+  background-color: #27374d;
+}
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 24px;
+  padding: 16px;
+}
+
+.modal-content button {
+  display: block;
+  margin: 10px auto 0;
+  padding: 10px 20px;
+  background: #526d82;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background: #27374d;
+}
+
+
+/* attendance-report */
+
+.attendance-report {
+  width: 49%;
+  margin-top: 2rem;
+  background: #dde6ed;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.student-count {
+  margin-top: 2rem;
+  background: #dde6ed;
+  padding: 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.edit-button {
+  color: #27374d;
+  text-align: center;
+  font-size: 16px;
+  margin: 5px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.edit-button:hover {
+  background-color: #27374d;
+  color: #fff;
+  transition: 0.5s ease-in-out;
+}
+.make-attendance {
+  width: 100%;
+  height: 490px;
+  overflow-y: auto;
+}
+/* payment */
+.payment-container {
+  margin-top: 2rem;
+}
+.payment-searchbar {
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  place-items: center;
+  display: flex;
+}
+.payment {
+  width: 60%;
+  background: #dde6ed;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.payment-summary {
+  width: 40%;
+  background: #dde6ed;
+  padding: 20px;
+  border-radius: 10px;
+}
+.total-payment {
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.total-payment-btn {
+  text-align: center;
+  background-color: #27374d;
+  color: #fff;
+  font-weight: bold;
+  border: none; 
+  border-radius: 10px;
+  cursor: pointer;
+  width: 150px;
+  padding: 10px 20px;
+}
+
+
+/* admin report */
+.admin-report-container {
+  overflow-y: auto;
+  height: 78vh;
+}
+.admin-report-chart {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subject-average-charts {
+  
+  gap: 20px;
+  height: 200px;
+  width: 450px;
+  overflow-y: auto;
+
+}
+
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-container form {
+  margin-top: 30px;
+}
+
+.modal-container input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.modal-container button {
+  width: 100%;
+  padding: 10px;
+  background-color: #526d82;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.modal-container button:hover {
+  background-color: #27374d;
+  transition: 0.3s ease-in-out;
+}
+
+.modal-container .react-credit-card__card {
+  margin-bottom: 20px;
+}
+
+.modal-container .react-credit-card__number,
+.modal-container .react-credit-card__expiry,
+.modal-container .react-credit-card__cvc,
+.modal-container .react-credit-card__name {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+}
+
+.add-to-cart-btn {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  background-color: #dde6ed;
+  padding: 10px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+.payment-row-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.total-payment-btn conform {
+  background-color: #27374d;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 150px;
+  padding: 10px 20px;
+}
+.swal2-container {
+  z-index: 1060 !important;
+}
+
+.custom-modal {
+  z-index: 1050 !important;
+}

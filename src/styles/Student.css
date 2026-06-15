@@ -1,0 +1,82 @@
+.dashboard {
+  display: flex;
+  gap: 20px;
+}
+.dashboard-content {
+  background: #fff;
+  flex: 1;
+  border-radius: 20px;
+  padding: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
+}
+.dashboard-container {
+  display: flex;
+  margin-top: 0.8rem;
+  overflow: auto;
+  height: 520px;
+}
+.student-class-schedule-content {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  width: 100%;
+}
+.student-class-schedule-view {
+  flex: 1;
+  background-color: #dde6ed;
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 2rem;
+}
+.calendar {
+  flex: 1;
+  width: 400px;
+  height: 300px;
+}
+.clock {
+  flex: 1;
+  width: 200px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.student-name {
+  color: black;
+  font-weight: bold;
+  margin-top: 0.4rem;
+  font-size: 26px;
+}
+
+
+
+
+/* My Classes */
+
+.subject-content-container {
+  flex: 1;
+}
+.subject-content-header {
+  display: flex;
+  gap: 20px;
+}
+.subject-content-header h3 {
+  color: #526d82;
+  margin-top: 0.4rem;
+}
+.subject-content {
+  margin-top: 1rem;
+}
+
+.submission-container {
+  flex: 1;
+}
+.submission-header {
+  display: flex;
+  gap: 20px;
+}
+.submission-header h3 {
+  color: #526d82;
+  margin-top: 0.4rem;
+}

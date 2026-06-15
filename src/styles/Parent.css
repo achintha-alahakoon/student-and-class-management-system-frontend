@@ -1,0 +1,99 @@
+.content {
+  height: 640px;
+}
+.dashboard {
+  display: flex;
+  gap: 20px;
+}
+.dashboard-content {
+  background: #fff;
+  flex: 1;
+  border-radius: 20px;
+  padding: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
+
+}
+
+.dashboard-container {
+  gap: 20px;
+  display: flex;
+  margin-top: 2rem;
+  overflow: auto;
+  height: 540px;
+}
+.student-card-container {
+  width: 35%;
+}
+.student-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.student-card-header h4 {
+  color: #526d82;
+}
+.add-student {
+  background: #dde6ed;
+  padding: 5px;
+  border-radius: 10px;
+  color: #969393;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.add-student .icon {
+  font-size: 20px;
+  transition: 0.5s ease-in-out;
+}
+.student-cards {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.overall {
+  width: 65%;
+}
+.parent-payment {
+  margin-top: 2rem;
+  width: 100%;
+  background-color: #dde6ed;
+  border-radius: 20px;
+  padding: 20px;
+}
+.overall-chart {
+  overflow: auto;
+  height: 540px;
+}
+.swal2-container {
+  z-index: 1060 !important;
+}
+
+.custom-modal {
+  z-index: 1050 !important;
+}
+.parent-add-student-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #526d82;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.parent-add-student-button:hover {
+  background-color: #27374d;
+  transition: 0.3s ease-in-out;
+}
+.parent-student-grades-search {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: center;
+}

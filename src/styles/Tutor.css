@@ -1,0 +1,176 @@
+.dashboard {
+  display: flex;
+  gap: 20px;
+}
+
+.dashboard-content {
+  background: #fff;
+  flex: 1;
+  border-radius: 20px;
+  padding: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  justify-content: space-between;
+}
+.dashboard-container {
+  display: flex;
+  margin-top: 2rem;
+  overflow: auto;
+  height: 540px;
+}
+.container {
+  width: 62%;
+  display: block;
+  gap: 20px;
+}
+.upcoming-classes {
+    flex: 1;
+}
+.charts {
+    display: flex;
+    gap: 20px;
+}
+.attendance-chart {
+    flex: 1;
+    height: 250px;
+    background-color: #dde6ed;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+.attendance-chart h6 {
+  color: #526d82;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px 0;
+}
+.payment-chart {
+    flex: 1;
+    height: 250px;
+    background-color: #dde6ed;
+    border-radius: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+.payment-chart h6 {
+  color: #526d82;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px 0;
+}
+.upcoming-classes h4 {
+  color: #526d82;
+  font-size: 20px;
+  font-weight: bold;
+}
+.class-card {
+  width: 320px;
+  border-radius: 20px;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 30px;
+  margin-bottom: 50px;
+}
+.class-card-content {
+  display: flex;
+  justify-content: space-between;
+}
+.class-card-title {
+  color: #526d82;
+}
+.class-card-grade {
+  background-color: #dde6ed;
+  border-radius: 10px;
+  padding: 5px 10px;
+  
+}
+.grade-upload-container {
+  margin-top: 2rem;
+}
+.grade-upload-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.grade-upload-content {
+  margin-top: 1rem;
+  overflow: auto;
+  height: 420px;
+  padding: 10px;
+}
+.grade-upload-button {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+.upload-btn {
+  background-color: #526d82;
+  color: #fff;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100px;
+  border: #526d82;
+  height: 40px;  
+}
+.upload-btn:hover {
+  background-color: #27374d ;
+  transition: 0.3s ease-in-out;
+}
+.grade-history-btn {
+  background-color: #526d82;
+  color: #fff;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 200px;
+  border: #526d82;
+  height: 40px;  
+}
+.grade-history-btn:hover {
+  background-color: #27374d ;
+  transition: 0.3s ease-in-out;
+}
+.assignment-type-container {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.add-assignment-type {
+  background-color: #dde6ed;
+  border-radius: 10px;
+}
+.tutor-grade-apply-button {
+  background-color: #526d82;
+  color: #fff;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100px;
+  border: #526d82;
+  height: 40px;  
+}
+.tutor-grade-apply-button:hover {
+  background-color: #27374d ;
+  transition: 0.3s ease-in-out;
+}
+.folder-icon {
+  background-color: #FF407D;
+  border-radius: 10px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.folder-details {
+  margin-left: 10px;
+  display: flex;
+  gap: 20px;
+}

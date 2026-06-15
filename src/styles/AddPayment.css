@@ -1,0 +1,9 @@
+.addpayment-btn {
+    text-align: center;
+}
+.addpayment-btn button:first-child {
+    width: 160px;
+}
+.payment-summary-container h3 {
+    color: #526d82;
+}

@@ -1,0 +1,73 @@
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    margin: 2rem 0;
+}
+.list-header h3 {
+    color: #526d82;
+}
+.edit {
+    background: #dde6ed;
+    border-radius: 10px;
+    padding: 12px;
+    color: #969393;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.edit .icon {
+    font-size: 20px;
+    transition: 0.5s ease-in-out;
+}
+.list-header select {
+    border: none;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: 1px solid #dde6ed;
+    color: #526d82;
+}
+.list-container {
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    max-height: 290px;
+    overflow-y: auto;
+}
+.list {
+    justify-content: space-between;
+    transition: 0.3s ease-in-out;
+    padding-right: 10px;
+    align-items: center;
+    display: flex;
+    
+}
+.list-header-title {
+    width: 200px;
+}
+.tutor-details {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: #526d82;
+    width: 300px;
+}
+.tutor-details img {
+    width: 50px;
+    border-radius: 50%;
+}
+.grade-container h6 {
+    color: #526d82;
+}
+.list:hover {
+    background: #dde6ed;
+    border-radius: 10px;
+}
+.tutor-todo {
+    color: #526d82;
+    font-size: 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+.tutors-list {
+height: 340px;
+}
