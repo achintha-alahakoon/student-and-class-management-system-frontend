@@ -28,109 +28,57 @@ export default function StudentProfile() {
   const [feeStatus, setFeeStatus] = useState(null);
   const navigate = useNavigate();
 
-  // Fetch data
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         setLoading(true);
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const config = {
+        headers: { Authorization: `Bearer ${auth.token}` }
+      };
 
-//         // Add base URL and auth header
-//         const config = {
-//           headers: { Authorization: `Bearer ${auth.token}` },
-//         };
+      const studentRes = await axios.get(
+        `http://localhost:8081/api/students/${id}`,
+        config
+      );
 
-//         const [studentRes, attendanceRes, feeRes] = await Promise.all([
-//           axios.get(`http://localhost:8081/api/students/${id}`, config),
-//         //   axios.get(
-//         //     `http://localhost:8081/api/students/${id}/attendance`,
-//         //     config,
-//         //   ),
-//         //   axios.get(`http://localhost:8081/api/students/${id}/fees`, config),
-//         ]);
+      // Handle both wrapped {success: true, data: student} and direct student responses
+      const studentData = studentRes.data?.data || studentRes.data;
 
-//         // Transform student data to match frontend expectations
-//         const transformedStudent = {
-//           ...studentRes.data,
-//           id: studentRes.data.StudentID,
-//           studentId: studentRes.data.StudentID.toString(),
-//           fullName:
-//             `${studentRes.data.FirstName} ${studentRes.data.LastName}`.trim(),
-//           gender: studentRes.data.Gender,
-//           grade: studentRes.data.Grade,
-//           phone: studentRes.data.TelNo,
-//           dateOfBirth: studentRes.data.Birthday,
-//           className: "N/A", // Add default or map from actual class data
-//           status: "Active", // Add default
-//           photo: null, // Add default
-//           nicPassport: "", // Add if available in API
-//           parentName: "", // Add if available
-//           parentPhone: "", // Add if available
-//           parentEmail: "", // Add if available
-//         };
+      // Transform to frontend expectations
+      const transformedStudent = {
+        id: studentData?.StudentID || id,
+        studentId: (studentData?.StudentID || id).toString(),
+        fullName: `${studentData?.FirstName || ''} ${studentData?.LastName || ''}`.trim(),
+        firstName: studentData?.FirstName || '',
+        lastName: studentData?.LastName || '',
+        gender: studentData?.Gender || 'Not specified',
+        grade: studentData?.Grade || 'N/A',
+        phone: studentData?.TelNo || 'N/A',
+        email: studentData?.Email || 'N/A',
+        address: studentData?.Address || 'N/A',
+        dateOfBirth: studentData?.Birthday || null,
+        className: 'N/A', // Will need to map from class data later
+        status: 'Active', // Default status
+        photo: null, // Default photo
+        nicPassport: '', // Add NIC field to backend if needed
+        parentName: '',
+        parentPhone: '',
+        parentEmail: ''
+      };
 
-//         setStudent(transformedStudent);
-//         setAttendance(attendanceRes.data);
-//         setFeeStatus(feeRes.data);
-//         setLoading(false);
-//       } catch (err) {
-//         console.error("Error fetching student data:", err);
-//         setLoading(false);
-//       }
-//     };
-
-//     if (auth.token) {
-//       fetchData();
-//     }
-//   }, [id, auth.token]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const config = {
-          headers: { Authorization: `Bearer ${auth.token}` }
-        };
-
-        const studentRes = await axios.get(
-          `http://localhost:8081/api/students/${id}`,
-          config
-        );
-
-        console.log("Student API Response:", studentRes.data); // Debug: Check actual structure
-
-        // Safely transform data with null checks
-        const s = studentRes.data;
-        const transformedStudent = {
-          id: s?.StudentID || s?.id || null,
-          studentId: (s?.StudentID || s?.id || '').toString(),
-          fullName: `${s?.FirstName || ''} ${s?.LastName || ''}`.trim() || 'Unknown',
-          gender: s?.Gender || s?.gender || 'Not specified',
-          grade: s?.Grade || s?.grade || 'N/A',
-          phone: s?.TelNo || s?.phone || 'N/A',
-          email: s?.Email || s?.email || 'N/A',
-          address: s?.Address || s?.address || 'N/A',
-          dateOfBirth: s?.Birthday || s?.dateOfBirth || null,
-          className: s?.ClassName || s?.className || 'N/A',
-          status: s?.Status || s?.status || 'Active',
-          photo: s?.Photo || s?.photo || null,
-          nicPassport: s?.NIC || s?.nicPassport || '',
-          parentName: s?.ParentName || s?.parentName || '',
-          parentPhone: s?.ParentPhone || s?.parentPhone || '',
-          parentEmail: s?.ParentEmail || s?.parentEmail || ''
-        };
-
-        setStudent(transformedStudent);
-      } catch (err) {
-        console.error("Error fetching student:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (auth?.token) {
-      fetchData();
+      setStudent(transformedStudent);
+    } catch (err) {
+      console.error("Error fetching student:", err);
+    } finally {
+      setLoading(false);
     }
-  }, [id, auth?.token]);
+  };
+
+  if (auth?.token) {
+    fetchData();
+  }
+}, [id, auth?.token]);
+
 
   if (loading) {
     return (

@@ -12,6 +12,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminStudents from "./pages/admin/Students";
 import AdminRegisterStudent from "./pages/admin/RegisterStudent";
 import StudentProfile from "./pages/admin/StudentProfile";
+import AdminTutors from "./pages/admin/Tutors";
+import AdminRegisterTutor from "./pages/admin/RegisterTutor";
+import TutorProfile from "./pages/admin/TutorProfile";
 import AdminClassSchedule from "./pages/admin/AdminClassSchedule";
 import AdminAttendance from "./pages/admin/AdminAttendance";
 import AdminPayment from "./pages/admin/AdminPayment";
@@ -78,6 +81,9 @@ function App() {
             <Route path="admin/students" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminStudents /></ProtectedRoute>} />
             <Route path="admin/register-student" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminRegisterStudent /></ProtectedRoute>} />
             <Route path="admin/students/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><StudentProfile /></ProtectedRoute>} />
+            <Route path="admin/tutors" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminTutors /></ProtectedRoute>} />
+            <Route path="admin/register-tutor" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminRegisterTutor /></ProtectedRoute>} />
+            <Route path="admin/tutors/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><TutorProfile /></ProtectedRoute>} />
             <Route path="admin/attendance" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminAttendance /></ProtectedRoute>} />
             <Route path="admin/payments" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminPayment /></ProtectedRoute>} />
             <Route path="admin/reports" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminReport /></ProtectedRoute>} />
