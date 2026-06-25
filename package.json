@@ -6,7 +6,7 @@
     "@boldreports/react-reporting-components": "^5.4.33",
     "@date-io/dayjs": "^3.0.0",
     "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/styled": "^11.11.5",
     "@fullcalendar/core": "^6.1.11",
     "@fullcalendar/daygrid": "^6.1.11",
     "@fullcalendar/interaction": "^6.1.11",
@@ -14,12 +14,13 @@
     "@fullcalendar/react": "^6.1.11",
     "@fullcalendar/timegrid": "^6.1.11",
     "@mui/icons-material": "^5.15.14",
-    "@mui/material": "^5.15.13",
-    "@mui/x-charts": "^7.1.0",
-    "@mui/x-data-grid": "^6.19.6",
-    "@mui/x-data-grid-generator": "^7.4.0",
-    "@mui/x-data-grid-premium": "^7.1.1",
-    "@mui/x-date-pickers": "^7.4.0",
+    "@mui/lab": "^5.0.0-alpha.170",
+    "@mui/material": "^5.15.14",
+    "@mui/x-charts": "^6.19.8",
+    "@mui/x-data-grid": "^6.20.4",
+    "@mui/x-data-grid-generator": "^6.20.4",
+    "@mui/x-data-grid-premium": "^6.20.4",
+    "@mui/x-date-pickers": "^6.20.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -32,6 +33,7 @@
     "jsbarcode": "^3.11.6",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
+    "jwt-decode": "^4.0.0",
     "material-ui-popup-state": "^5.1.0",
     "moment": "^2.30.1",
     "react": "^18.2.0",
@@ -74,6 +76,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.5.1",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19"
   }
 }
-  
