@@ -1,135 +1,118 @@
-import React, { useState, useEffect } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import { useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import Layout from "./components/layout/Layout";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+// Auth pages
+import Login from "./pages/auth/Login";
 
-import AdminSidebar from "./components/AdminSidebar";
-import TutorSidebar from "./components/TutorSidebar";
-import ParentSidebar from "./components/ParentSidebar";
-import StudentSidebar from "./components/StudentSidebar";
+// Admin pages
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminStudents from "./pages/admin/Students";
+import AdminRegisterStudent from "./pages/admin/RegisterStudent";
+import StudentProfile from "./pages/admin/StudentProfile";
+import AdminTutors from "./pages/admin/Tutors";
+import AdminRegisterTutor from "./pages/admin/RegisterTutor";
+import TutorProfile from "./pages/admin/TutorProfile";
+import AdminClassSchedule from "./pages/admin/AdminClassSchedule";
+import AdminAttendance from "./pages/admin/AdminAttendance";
+import AdminPayment from "./pages/admin/AdminPayment";
+import AdminReport from "./pages/admin/AdminReport";
 
-import AdminDashboard from "./pages/AdminDashboard";
-import AdminClassSchedule from "./pages/AdminClassSchedule";
-import AdminAttendance from "./pages/AdminAttendance";
-import AdminPayment from "./pages/AdminPayment";
-import AdminReport from "./pages/AdminReport";
+// Tutor pages
+import TutorDashboard from "./pages/tutor/TutorDashboard";
+import TutorClassSchedule from "./pages/tutor/TutorClassSchedule";
+import TutorClass from "./pages/tutor/TutorClass";
+import TutorGrade from "./pages/tutor/TutorGrade";
 
-import TutorDashboard from "./pages/TutorDashboard";
-import TutorClassSchedule from "./pages/TutorClassSchedule";
-import TutorClass from "./pages/TutorClass";
-import TutorGrade from "./pages/TutorGrade";
+// Student pages
+import StudentDashboard from "./pages/student/StudentDashboard";
+import StudentClassSchedule from "./pages/student/StudentClassSchedule";
+import StudentClass from "./pages/student/StudentClass";
+import StudentGrade from "./pages/student/StudentGrade";
 
-import ParentDashboard from "./pages/ParentDashboard";
-import ParentClassSchedule from "./pages/ParentClassSchedule";
-import ParentGrade from "./pages/ParentGrade";
-import ParentPayment from "./pages/ParentPayment";
-
-import StudentDashboard from "./pages/StudentDashboard";
-import StudentClassSchedule from "./pages/StudentClassSchedule";
-import StudentClass from "./pages/StudentClass";
-import StudentGrade from "./pages/StudentGrade";
-
-import PrivateRoutes from "./components/PrivateRoutes";
+// Parent pages
+import ParentDashboard from "./pages/parent/ParentDashboard";
+import ParentClassSchedule from "./pages/parent/ParentClassSchedule";
+import ParentGrade from "./pages/parent/ParentGrade";
+import ParentPayment from "./pages/parent/ParentPayment";
 
 
-function ConditionalSideBar({ role }) {
-  const location = useLocation();
-  const sidebarComponents = {
-    Admin: <AdminSidebar />,
-    Tutor: <TutorSidebar />,
-    Parent: <ParentSidebar />,
-    Student: <StudentSidebar />,
+// Redirects /dashboard to the correct role home — uses AuthContext, not localStorage
+function RoleIndex() {
+  const { role, loading } = useAuth();
+
+  if (loading) return null; // wait for JWT decode
+
+  const roleHome = {
+    Admin:   "/dashboard/admin",
+    Tutor:   "/dashboard/tutor",
+    Student: "/dashboard/student",
+    Parent:  "/dashboard/parent",
   };
 
-  if (
-    location.pathname !== "/" &&
-    location.pathname !== "/register" &&
-    role !== ""
-  ) {
-    const SidebarComponent = sidebarComponents[role];
-    if (SidebarComponent) {
-      return SidebarComponent;
-    }
-  }
-  return null;
+  return <Navigate to={roleHome[role] || "/login"} replace />;
 }
 
 function App() {
-  const [role, setRole] = useState("");
-
-  useEffect(() => {
-    // Fetch the user role from local storage
-    const userRole = localStorage.getItem("role");
-    if (userRole) {
-      setRole(userRole);
-    }
-  }, []);
-
   return (
-    <Router>
-      <div className="d-flex h-100">
-        <ConditionalSideBar role={role} />
-        <div className="flex-grow-1 d-flex">
-          <div className="flex-grow-1">
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public */}
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
 
-              <Route element={<PrivateRoutes role="Admin" />}>
-                <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                <Route path="/admin-attendance" element={<AdminAttendance />} />
-                <Route path="/admin-payment" element={<AdminPayment />} />
-                <Route path="/admin-report" element={<AdminReport />} />
-                <Route
-                  path="/admin-class-schedule"
-                  element={<AdminClassSchedule />}
-                />
-              </Route>
+          {/* Protected shell — all roles share Layout */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Layout />
+              </ProtectedRoute>
+            }
+          >
+            {/* Index — redirect to role home */}
+            <Route index element={<RoleIndex />} />
 
-              <Route element={<PrivateRoutes role="Tutor" />}>
-                <Route path="/tutor-dashboard" element={<TutorDashboard />} />
-                <Route
-                  path="/tutor-class-schedule"
-                  element={<TutorClassSchedule />}
-                />
-                <Route path="/tutor-classes" element={<TutorClass />} />
-                <Route path="/tutor-grades" element={<TutorGrade />} />
-              </Route>
+            {/* ── Admin ── */}
+            <Route path="admin" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminDashboard /></ProtectedRoute>} />
+            <Route path="admin/students" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminStudents /></ProtectedRoute>} />
+            <Route path="admin/register-student" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminRegisterStudent /></ProtectedRoute>} />
+            <Route path="admin/students/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><StudentProfile /></ProtectedRoute>} />
+            <Route path="admin/tutors" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminTutors /></ProtectedRoute>} />
+            <Route path="admin/register-tutor" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminRegisterTutor /></ProtectedRoute>} />
+            <Route path="admin/tutors/:id" element={<ProtectedRoute allowedRoles={["Admin"]}><TutorProfile /></ProtectedRoute>} />
+            <Route path="admin/attendance" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminAttendance /></ProtectedRoute>} />
+            <Route path="admin/payments" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminPayment /></ProtectedRoute>} />
+            <Route path="admin/reports" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminReport /></ProtectedRoute>} />
+            <Route path="admin/class-schedule" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminClassSchedule /></ProtectedRoute>} />
 
-              <Route element={<PrivateRoutes role="Student" />}>
-                <Route
-                  path="/student-dashboard"
-                  element={<StudentDashboard />}
-                />
-                <Route
-                  path="/student-class-schedule"
-                  element={<StudentClassSchedule />}
-                />
-                <Route path="/student-courses" element={<StudentClass />} />
-                <Route path="/student-grades" element={<StudentGrade />} />
-              </Route>
+            {/* ── Tutor ── */}
+            <Route path="tutor" element={<ProtectedRoute allowedRoles={["Tutor"]}><TutorDashboard /></ProtectedRoute>} />
+            <Route path="tutor/class-schedule" element={<ProtectedRoute allowedRoles={["Tutor"]}><TutorClassSchedule /></ProtectedRoute>} />
+            <Route path="tutor/classes" element={<ProtectedRoute allowedRoles={["Tutor"]}><TutorClass /></ProtectedRoute>} />
+            <Route path="tutor/grades" element={<ProtectedRoute allowedRoles={["Tutor"]}><TutorGrade /></ProtectedRoute>} />
 
-              <Route element={<PrivateRoutes role="Parent" />}>
-                <Route path="/parent-dashboard" element={<ParentDashboard />} />
-                <Route
-                  path="/parent-class-schedule"
-                  element={<ParentClassSchedule />}
-                />
-                <Route path="/parent-grades" element={<ParentGrade />} />
-                <Route path="/parent-payment" element={<ParentPayment />} />
-              </Route>
-            </Routes>
-          </div>
-        </div>
-      </div>
-    </Router>
+            {/* ── Student ── */}
+            <Route path="student" element={<ProtectedRoute allowedRoles={["Student"]}><StudentDashboard /></ProtectedRoute>} />
+            <Route path="student/class-schedule" element={<ProtectedRoute allowedRoles={["Student"]}><StudentClassSchedule /></ProtectedRoute>} />
+            <Route path="student/classes" element={<ProtectedRoute allowedRoles={["Student"]}><StudentClass /></ProtectedRoute>} />
+            <Route path="student/grades" element={<ProtectedRoute allowedRoles={["Student"]}><StudentGrade /></ProtectedRoute>} />
+
+            {/* ── Parent ── */}
+            <Route path="parent" element={<ProtectedRoute allowedRoles={["Parent"]}><ParentDashboard /></ProtectedRoute>} />
+            <Route path="parent/class-schedule" element={<ProtectedRoute allowedRoles={["Parent"]}><ParentClassSchedule /></ProtectedRoute>} />
+            <Route path="parent/grades" element={<ProtectedRoute allowedRoles={["Parent"]}><ParentGrade /></ProtectedRoute>} />
+            <Route path="parent/payments" element={<ProtectedRoute allowedRoles={["Parent"]}><ParentPayment /></ProtectedRoute>} />
+          </Route>
+
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
