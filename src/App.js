@@ -87,7 +87,7 @@ function App() {
             <Route path="admin/attendance" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminAttendance /></ProtectedRoute>} />
             <Route path="admin/payments" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminPayment /></ProtectedRoute>} />
             <Route path="admin/reports" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminReport /></ProtectedRoute>} />
-            <Route path="admin/class-schedule" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminClassSchedule /></ProtectedRoute>} />
+            <Route path="admin/class-management" element={<ProtectedRoute allowedRoles={["Admin"]}><AdminClassSchedule /></ProtectedRoute>} />
 
             {/* ── Tutor ── */}
             <Route path="tutor" element={<ProtectedRoute allowedRoles={["Tutor"]}><TutorDashboard /></ProtectedRoute>} />
