@@ -14,7 +14,7 @@ const navConfig = {
     { icon: LayoutDashboard, label: "Dashboard",      path: "/dashboard/admin",                end: true },
     { icon: BookOpen,        label: "Students",       path: "/dashboard/admin/students"                 },
     { icon: BookOpen,        label: "Tutors",         path: "/dashboard/admin/tutors"                   },
-    { icon: BookOpen,        label: "Class Schedule", path: "/dashboard/admin/class-schedule"           },
+    { icon: BookOpen,        label: "Class Management", path: "/dashboard/admin/class-management"           },
     { icon: CalendarCheck,   label: "Attendance",     path: "/dashboard/admin/attendance"               },
     { icon: CreditCard,      label: "Payments",       path: "/dashboard/admin/payments"                 },
     { icon: BarChart3,       label: "Reports",        path: "/dashboard/admin/reports"                  },
