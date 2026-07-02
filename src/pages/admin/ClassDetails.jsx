@@ -51,6 +51,7 @@ export default function ClassDetails() {
           ...responseData.class,
           ...responseData,
           tutor: responseData.class?.tutor,
+          students: responseData.enrolledStudents,
         };
         setClassData(flattenedData);
       } catch (err) {
@@ -63,7 +64,7 @@ export default function ClassDetails() {
     fetchClass();
   }, [id, token]);
 
-  // ── Fetch available students when modal opens ───────────
+  // Fetch available students when modal opens
   useEffect(() => {
     if (!showAddStudent) return;
     const fetchStudents = async () => {

@@ -51,7 +51,7 @@ export default function Students() {
         // Fetch classes with auth header
         try {
           const classesRes = await axios.get(
-            "http://localhost:8081/api/classes",
+            "http://localhost:8081/api/classSchedule/scheduledClasses",
             config
           );
           setClasses(classesRes.data);
@@ -137,8 +137,8 @@ export default function Students() {
           >
             <option value="">All Classes</option>
             {classes.map((cls) => (
-              <option key={cls.id} value={cls.id}>
-                {cls.name}
+              <option key={cls.ClassID} value={cls.ClassID}>
+                {cls.ClassName}
               </option>
             ))}
           </select>
@@ -160,10 +160,10 @@ export default function Students() {
                 Name
               </th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
-                Class
+                Grade
               </th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
-                Grade
+                Address
               </th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">
                 Contact
@@ -210,10 +210,10 @@ export default function Students() {
                     {student.fullName}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-500">
-                    {student.className}
+                    {student.grade}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-500">
-                    {student.grade}
+                    {student.address}
                   </td>
                   <td className="px-4 py-3 text-sm text-gray-500">
                     {student.phone}
