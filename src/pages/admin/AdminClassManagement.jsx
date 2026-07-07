@@ -201,7 +201,7 @@ export default function ClassManagement() {
                   <td className="px-4 py-3.5 text-center">
                     <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
                       <Users className="h-3 w-3" />
-                      {cls.studentCount ?? "—"}
+                      {cls.StudentCount ?? "—"}
                     </span>
                   </td>
 

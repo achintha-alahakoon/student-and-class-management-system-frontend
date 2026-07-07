@@ -70,7 +70,7 @@ export default function ClassDetails() {
     const fetchStudents = async () => {
       try {
         const res = await axios.get(
-          `http://localhost:8081/api/classes/${id}/available-students`,
+          `http://localhost:8081/api/classSchedule/available-students/${id}`,
           { headers: { Authorization: `Bearer ${authToken()}` } },
         );
         setAvailableStudents(res.data?.students ?? res.data ?? []);
@@ -85,9 +85,17 @@ export default function ClassDetails() {
   // ── Add students ────────────────────────────────────────
   const handleSaveStudents = async () => {
     try {
+      // Map selected StudentIDs to UserIDs
+      const selectedUserIds = availableStudents
+        .filter((s) => selectedStudents.includes(s.StudentID))
+        .map((s) => s.UserID);
+
       await axios.post(
-        `http://localhost:8081/api/classes/${id}/students`,
-        { studentIds: selectedStudents },
+        `http://localhost:8081/api/classSchedule/assign-students/${id}`,
+        {
+          classId: id,
+          userIds: selectedUserIds,
+        },
         {
           headers: {
             Authorization: `Bearer ${authToken()}`,
@@ -95,13 +103,17 @@ export default function ClassDetails() {
           },
         },
       );
+
+      // Update local state with newly added students
       const added = availableStudents.filter((s) =>
-        selectedStudents.includes(s.id ?? s.StudentID),
+        selectedStudents.includes(s.StudentID),
       );
+
       setClassData((prev) => ({
         ...prev,
         students: [...(prev.students ?? []), ...added],
       }));
+
       setShowAddStudent(false);
       setSelectedStudents([]);
     } catch (err) {
@@ -114,7 +126,7 @@ export default function ClassDetails() {
   const confirmRemoveStudent = async () => {
     try {
       await axios.delete(
-        `http://localhost:8081/api/classes/${id}/students/${studentToRemove.id ?? studentToRemove.StudentID}`,
+        `http://localhost:8081/api/classSchedule/${id}/students/${studentToRemove.id ?? studentToRemove.StudentID}`,
         { headers: { Authorization: `Bearer ${authToken()}` } },
       );
       setClassData((prev) => ({
@@ -136,7 +148,7 @@ export default function ClassDetails() {
   // ── Delete class ────────────────────────────────────────
   const handleDeleteClass = async () => {
     try {
-      await axios.delete(`http://localhost:8081/api/classes/${id}`, {
+      await axios.delete(`http://localhost:8081/api/classSchedule/${id}`, {
         headers: { Authorization: `Bearer ${authToken()}` },
       });
       navigate("/dashboard/admin/class-management");
@@ -553,7 +565,7 @@ export default function ClassDetails() {
         )}
       </div>
 
-      {/* Add Students Modal */}
+      {/* Add Students Modal - UPDATED */}
       {showAddStudent && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl p-6 max-w-md w-full">
@@ -568,31 +580,64 @@ export default function ClassDetails() {
                 <X className="h-5 w-5" />
               </button>
             </div>
+
+            {/* Bulk select header */}
+            <div className="flex justify-between items-center mb-3">
+              <p className="text-sm text-gray-500">
+                Grade {grade} Students ({availableStudents.length})
+              </p>
+              <button
+                onClick={() => {
+                  const allAvailableIds = availableStudents
+                    .filter((s) => !s.isEnrolled)
+                    .map((s) => s.StudentID);
+                  setSelectedStudents(allAvailableIds);
+                }}
+                className="text-sm text-indigo-600 hover:underline font-medium"
+              >
+                Select All Available
+              </button>
+            </div>
+
             <div className="space-y-2 max-h-60 overflow-y-auto mb-4">
               {availableStudents.length === 0 ? (
                 <p className="text-sm text-gray-400 text-center py-6">
-                  No available students to add
+                  No students available
                 </p>
               ) : (
                 availableStudents.map((s) => {
-                  const sid = s.id ?? s.StudentID;
+                  const sid = s.StudentID;
                   const sname =
-                    s.name ?? `${s.FirstName ?? ""} ${s.LastName ?? ""}`.trim();
+                    `${s.FirstName ?? ""} ${s.LastName ?? ""}`.trim();
+                  const isAlreadyEnrolled = s.isEnrolled;
+
                   return (
                     <label
                       key={sid}
-                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 cursor-pointer"
+                      className={`flex items-center gap-3 p-2 rounded-lg transition ${
+                        isAlreadyEnrolled
+                          ? "bg-green-50 cursor-not-allowed"
+                          : "cursor-pointer hover:bg-gray-50"
+                      }`}
                     >
                       <input
                         type="checkbox"
                         checked={selectedStudents.includes(sid)}
-                        onChange={() => handleStudentSelect(sid)}
+                        onChange={() =>
+                          !isAlreadyEnrolled && handleStudentSelect(sid)
+                        }
+                        disabled={isAlreadyEnrolled}
                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                       />
                       <div>
                         <p className="font-medium text-gray-900">{sname}</p>
                         <p className="text-xs text-gray-500">
-                          {s.studentId ?? s.StudentID}
+                          ID: {s.StudentID}
+                          {isAlreadyEnrolled && (
+                            <span className="ml-2 text-xs text-green-600 bg-green-100 px-1.5 py-0.5 rounded-full">
+                              Already enrolled
+                            </span>
+                          )}
                         </p>
                       </div>
                     </label>
@@ -600,6 +645,7 @@ export default function ClassDetails() {
                 })
               )}
             </div>
+
             <div className="flex justify-end gap-3">
               <button
                 onClick={() => setShowAddStudent(false)}
