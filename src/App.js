@@ -18,7 +18,7 @@ import TutorProfile from "./pages/admin/TutorProfile";
 import AdminClassManagement from "./pages/admin/AdminClassManagement";
 import CreateClass from "./pages/admin/CreateClass";
 import ClassDetails from "./pages/admin/ClassDetails";
-import AdminAttendance from "./pages/admin/AdminAttendance";
+import AdminAttendance from "./pages/admin/Attendance/AdminAttendance";
 import AdminPayment from "./pages/admin/AdminPayment";
 import AdminReport from "./pages/admin/AdminReport";
 
