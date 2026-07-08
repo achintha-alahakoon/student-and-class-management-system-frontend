@@ -85,16 +85,10 @@ export default function ClassDetails() {
   // ── Add students ────────────────────────────────────────
   const handleSaveStudents = async () => {
     try {
-      // Map selected StudentIDs to UserIDs
-      const selectedUserIds = availableStudents
-        .filter((s) => selectedStudents.includes(s.StudentID))
-        .map((s) => s.UserID);
-
       await axios.post(
         `http://localhost:8081/api/classSchedule/assign-students/${id}`,
         {
-          classId: id,
-          userIds: selectedUserIds,
+          studentIds: selectedStudents, // Send StudentIDs directly
         },
         {
           headers: {
@@ -104,7 +98,7 @@ export default function ClassDetails() {
         },
       );
 
-      // Update local state with newly added students
+      // Update local state
       const added = availableStudents.filter((s) =>
         selectedStudents.includes(s.StudentID),
       );

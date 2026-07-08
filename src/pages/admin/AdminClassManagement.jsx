@@ -86,7 +86,7 @@ export default function ClassManagement() {
     (name ?? "?").split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
