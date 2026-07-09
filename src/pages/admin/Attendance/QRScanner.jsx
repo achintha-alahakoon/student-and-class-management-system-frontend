@@ -4,7 +4,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { CheckCircle, XCircle } from "lucide-react";
 
-export default function QRScanner({ classData, onSuccess }) {
+export default function QRScanner({ classData, date, onSuccess }) {
   const { token } = useAuth();
   const [students, setStudents] = useState([]);
   const [scannedIds, setScannedIds] = useState([]);
@@ -13,38 +13,51 @@ export default function QRScanner({ classData, onSuccess }) {
   const [error, setError] = useState(null);
   const authToken = () => token || localStorage.getItem("token");
 
-  // Fetch students for validation
+  // Fetch students AND existing attendance
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `http://localhost:8081/api/classSchedule/available-students/${classData.ClassID}`,
-          { headers: { Authorization: `Bearer ${authToken()}` } }
-        );
-        setStudents(res.data.students || []);
+        const [studentsRes, attendanceRes] = await Promise.all([
+          axios.get(
+            `http://localhost:8081/api/classSchedule/available-students/${classData.ClassID}`,
+            { headers: { Authorization: `Bearer ${authToken()}` } }
+          ),
+          axios.get(
+            `http://localhost:8081/api/attendance/getAttendanceByClass/${classData.ClassID}`,
+            { params: { date }, headers: { Authorization: `Bearer ${authToken()}` } }
+          ),
+        ]);
+
+        const studentsData = studentsRes.data.students || [];
+        const attendanceData = attendanceRes.data?.records || [];
+
+        // Pre-populate scannedIds with students already marked as Present
+        const presentStudents = attendanceData
+          .filter((record) => record.Status === "Present")
+          .map((record) => record.StudentID);
+
+        setStudents(studentsData);
+        setScannedIds(presentStudents);
       } catch (err) {
-        console.error("Failed to fetch students:", err);
-        setError("Failed to load student list");
+        console.error("Failed to fetch data:", err);
+        setError("Failed to load data");
       } finally {
         setLoading(false);
       }
     };
-    fetchStudents();
-  }, [classData.ClassID, token]);
+    fetchData();
+  }, [classData.ClassID, date, token]);
 
   const handleScan = (result) => {
     if (result) {
       try {
         const studentId = parseInt(result.getText());
         const student = students.find((s) => s.StudentID === studentId);
-
-        if (student) {
-          if (!scannedIds.includes(studentId)) {
-            setScannedIds((prev) => [...prev, studentId]);
-            setError(null);
-          }
-        } else {
+        if (student && !scannedIds.includes(studentId)) {
+          setScannedIds((prev) => [...prev, studentId]);
+          setError(null);
+        } else if (!student) {
           setError(`Student ID ${studentId} not in this class`);
           setTimeout(() => setError(null), 3000);
         }
@@ -66,11 +79,7 @@ export default function QRScanner({ classData, onSuccess }) {
 
       await axios.post(
         "http://localhost:8081/api/attendance/mark",
-        {
-          classId: classData.ClassID,
-          date: new Date().toISOString().split("T")[0],
-          attendance: attendanceList,
-        },
+        { classId: classData.ClassID, date, attendance: attendanceList },
         { headers: { Authorization: `Bearer ${authToken()}` } }
       );
 
@@ -100,12 +109,10 @@ export default function QRScanner({ classData, onSuccess }) {
 
   return (
     <div className="space-y-6">
-      {/* Instructions */}
       <div className="p-4 bg-indigo-50 rounded-xl">
         <p className="text-sm text-indigo-700">
-          📷 Point the camera at student QR codes. Scanned students will be marked{" "}
-          <span className="font-medium text-green-600">Present</span>. Non-scanned
-          students will be marked <span className="font-medium text-red-600">Absent</span>.
+          📷 Scan QR codes. Existing attendance for{" "}
+          <strong>{new Date(date).toLocaleDateString()}</strong> is pre-loaded.
         </p>
         {error && (
           <div className="mt-2 p-2 bg-red-50 text-red-600 rounded text-sm flex items-center gap-2">
@@ -114,7 +121,6 @@ export default function QRScanner({ classData, onSuccess }) {
         )}
       </div>
 
-      {/* QR Scanner */}
       <div className="bg-white p-4 rounded-xl border border-gray-100">
         <div className="flex justify-center">
           <div className="w-full max-w-md">
@@ -126,12 +132,9 @@ export default function QRScanner({ classData, onSuccess }) {
             />
           </div>
         </div>
-        <p className="text-center text-sm text-gray-500 mt-2">
-          Scan student QR codes
-        </p>
+        <p className="text-center text-sm text-gray-500 mt-2">Scan student QR codes</p>
       </div>
 
-      {/* Scanned students list */}
       <div className="bg-white p-4 rounded-xl border border-gray-100">
         <div className="flex justify-between items-center mb-2">
           <h3 className="font-semibold text-gray-900">Scanned Students</h3>
@@ -141,15 +144,10 @@ export default function QRScanner({ classData, onSuccess }) {
         </div>
         <div className="max-h-48 overflow-y-auto border rounded-lg">
           {scannedIds.length === 0 ? (
-            <div className="p-4 text-center text-gray-400 text-sm">
-              No students scanned yet
-            </div>
+            <div className="p-4 text-center text-gray-400 text-sm">No students scanned yet</div>
           ) : (
             scannedIds.map((id) => (
-              <div
-                key={id}
-                className="flex items-center justify-between p-2 border-b last:border-0"
-              >
+              <div key={id} className="flex items-center justify-between p-2 border-b last:border-0">
                 <span className="text-gray-700">{getStudentName(id)}</span>
                 <span className="flex items-center gap-1 text-green-600 text-sm font-medium">
                   <CheckCircle className="h-4 w-4" /> Present
@@ -160,7 +158,6 @@ export default function QRScanner({ classData, onSuccess }) {
         </div>
       </div>
 
-      {/* Submit button */}
       <div className="flex justify-end">
         <button
           onClick={handleSubmit}

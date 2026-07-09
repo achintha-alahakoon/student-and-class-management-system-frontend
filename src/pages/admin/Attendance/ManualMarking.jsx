@@ -10,45 +10,61 @@ const statusIcons = {
   Excused: <AlertCircle className="h-4 w-4 text-blue-500" />,
 };
 
-export default function ManualMarking({ classData, onSuccess }) {
+export default function ManualMarking({ classData, date, onSuccess }) {
   const { token } = useAuth();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [existingAttendance, setExistingAttendance] = useState({});
   const authToken = () => token || localStorage.getItem("token");
 
-  // Fetch students for the selected class
+  // Fetch students AND existing attendance for the selected date
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(
-          `http://localhost:8081/api/attendance/getAvailableStudents/${classData.ClassID}`,
-          { headers: { Authorization: `Bearer ${authToken()}` } }
-        );
-        setStudents(res.data.students || []);
+        const [studentsRes, attendanceRes] = await Promise.all([
+          axios.get(
+            `http://localhost:8081/api/attendance/getAvailableStudents/${classData.ClassID}`,
+            { headers: { Authorization: `Bearer ${authToken()}` } }
+          ),
+          axios.get(
+            `http://localhost:8081/api/attendance/getAttendanceByClass/${classData.ClassID}`,
+            { params: { date }, headers: { Authorization: `Bearer ${authToken()}` } }
+          ),
+        ]);
+
+        const studentsData = studentsRes.data.students || [];
+        const attendanceData = attendanceRes.data?.records || [];
+
+        const attendanceMap = {};
+        attendanceData.forEach((record) => {
+          attendanceMap[record.StudentID] = record.Status;
+        });
+
+        setStudents(studentsData);
+        setExistingAttendance(attendanceMap);
       } catch (err) {
-        console.error("Failed to fetch students:", err);
-        alert("Failed to load students");
+        console.error("Failed to fetch data:", err);
+        alert("Failed to load data");
       } finally {
         setLoading(false);
       }
     };
-    fetchStudents();
-  }, [classData.ClassID, token]);
+    fetchData();
+  }, [classData.ClassID, date, token]);
 
-  // Initialize attendance state (default: Present)
+  // Initialize with existing attendance (default: Present)
   const [attendance, setAttendance] = useState({});
   useEffect(() => {
     if (students.length > 0) {
       const initial = students.reduce((acc, s) => {
-        acc[s.StudentID] = "Present";
+        acc[s.StudentID] = existingAttendance[s.StudentID] || "Present";
         return acc;
       }, {});
       setAttendance(initial);
     }
-  }, [students]);
-  
+  }, [students, existingAttendance]);
 
   const handleStatusChange = (studentId, status) => {
     setAttendance((prev) => ({ ...prev, [studentId]: status }));
@@ -67,11 +83,7 @@ export default function ManualMarking({ classData, onSuccess }) {
 
       await axios.post(
         "http://localhost:8081/api/attendance/markAttendance",
-        {
-          classId: classData.ClassID,
-          date: new Date().toISOString().split("T")[0],
-          attendance: attendanceList,
-        },
+        { classId: classData.ClassID, date, attendance: attendanceList },
         { headers: { Authorization: `Bearer ${authToken()}` } }
       );
 
@@ -96,15 +108,13 @@ export default function ManualMarking({ classData, onSuccess }) {
 
   return (
     <div className="space-y-6">
-      {/* Instructions */}
       <div className="p-4 bg-indigo-50 rounded-xl">
         <p className="text-sm text-indigo-700">
-          📝 Click on a student to change their attendance status. Default is{" "}
-          <span className="font-medium text-green-600">Present</span>.
+          📝 Click to change status. Existing attendance for{" "}
+          <strong>{new Date(date).toLocaleDateString()}</strong> is pre-loaded.
         </p>
       </div>
 
-      {/* Student list */}
       <div className="overflow-x-auto bg-white rounded-xl border border-gray-100">
         <table className="w-full text-sm">
           <thead className="bg-gray-50">
@@ -151,7 +161,6 @@ export default function ManualMarking({ classData, onSuccess }) {
         </table>
       </div>
 
-      {/* Submit button */}
       <div className="flex justify-end">
         <button
           onClick={handleSubmit}
