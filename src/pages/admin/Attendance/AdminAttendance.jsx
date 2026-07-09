@@ -143,7 +143,7 @@ export default function AdminAttendance() {
       }
     };
     fetchRecords();
-  }, [view, selectedClass, token]);
+  }, [view, selectedClass, selectedDate, token]);
 
   // Example: Calculate avgAttendance from classes
   useEffect(() => {
