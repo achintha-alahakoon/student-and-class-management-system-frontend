@@ -215,7 +215,7 @@ export default function TutorProfile() {
       <div className="grid grid-cols-3 gap-4">
         <StatCard
           label="Total Classes"
-          value={tutor.totalClasses ?? "—"}
+          value={tutor.classCount ?? "—"}
           color="text-indigo-600"
         />
         <StatCard
