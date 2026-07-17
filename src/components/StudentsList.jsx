@@ -45,7 +45,7 @@ const StudentsList = ({ onSelectUser }) => {
     address: "",
   });
 
-  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -89,7 +89,7 @@ const StudentsList = ({ onSelectUser }) => {
     e.preventDefault();
     axios
       .put(
-        `http://localhost:8081/api/students/edit/${selectedUserId}`,
+        `http://localhost:8081/api/students/edit/${selectedStudentId}`,
         editFormData
       )
       .then((response) => {
