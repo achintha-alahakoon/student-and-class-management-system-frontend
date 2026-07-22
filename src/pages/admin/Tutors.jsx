@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
+  Edit,
   Trash2,
   Download,
   CheckCircle,
@@ -67,6 +68,23 @@ export default function Tutors() {
   const [page, setPage] = useState(1);
   const [deleteId, setDeleteId] = useState(null);
   const [error, setError] = useState("");
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectedTutor, setSelectedTutor] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    firstName: "",
+    lastName: "",
+    nicNo: "",
+    gender: "",
+    dob: "",
+    telephoneNumber: "",
+    email: "",
+    address: "",
+    subject: "",
+    username: "",
+    password: "",
+  });
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     const fetchTutors = async () => {
@@ -170,6 +188,71 @@ export default function Tutors() {
       alert("Failed to activate tutor.");
     } finally {
       setDeleteId(null); // ← add this
+    }
+  };
+
+  const handleEditClick = (tutor) => {
+    setSelectedTutor(tutor);
+    setEditFormData({
+      firstName: tutor.FirstName || "",
+      lastName: tutor.LastName || "",
+      nicNo: tutor.NICNo || "",
+      gender: tutor.Gender || "",
+      dob: tutor.DOB || tutor.Birthday || "",
+      telephoneNumber: tutor.TelNo || "",
+      email: tutor.Email || "",
+      address: tutor.Address || "",
+      subject: tutor.Subject || "",
+      username: tutor.user?.username || "",
+      password: "",
+    });
+    setOpenEditModal(true);
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedTutor) return;
+    setSaving(true);
+    try {
+      const authToken = token || localStorage.getItem("token");
+      await axios.put(
+        `http://localhost:8081/api/tutors/edit/${selectedTutor.TutorID}`,
+        editFormData,
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      );
+
+      // Update the row locally so the table reflects changes immediately
+      setTutors((prev) =>
+        prev.map((t) =>
+          t.TutorID === selectedTutor.TutorID
+            ? {
+                ...t,
+                FirstName: editFormData.firstName,
+                LastName: editFormData.lastName,
+                NICNo: editFormData.nicNo,
+                Gender: editFormData.gender,
+                DOB: editFormData.dob,
+                TelNo: editFormData.telephoneNumber,
+                Email: editFormData.email,
+                Address: editFormData.address,
+                Subject: editFormData.subject,
+              }
+            : t
+        )
+      );
+
+      setOpenEditModal(false);
+      setSelectedTutor(null);
+    } catch (err) {
+      console.error("Error updating tutor:", err);
+      alert("Failed to update tutor. Please try again.");
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -319,6 +402,17 @@ export default function Tutors() {
                         <Eye className="h-4 w-4" />
                       </button>
 
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEditClick(tutor);
+                        }}
+                        className="rounded-lg p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg"
+                        title="Edit tutor"
+                      >
+                        <Edit className="h-4 w-4" />
+                      </button>
+
                       {tutor.isActive ? (
                         // Active tutor — show deactivate button
                         <button
@@ -444,6 +538,162 @@ export default function Tutors() {
                 </div>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Edit Tutor Modal */}
+      {openEditModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => setOpenEditModal(false)}
+        >
+          <div
+            className="bg-white rounded-xl w-full max-w-lg p-6 space-y-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">Edit Tutor</h2>
+              <p className="text-sm text-gray-500">
+                Update {selectedTutor?.FirstName} {selectedTutor?.LastName}'s details
+              </p>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium text-gray-500">First Name</label>
+                  <input
+                    name="firstName"
+                    value={editFormData.firstName}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Last Name</label>
+                  <input
+                    name="lastName"
+                    value={editFormData.lastName}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">NIC Number</label>
+                  <input
+                    name="nicNo"
+                    value={editFormData.nicNo}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Phone</label>
+                  <input
+                    name="telephoneNumber"
+                    value={editFormData.telephoneNumber}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="text-xs font-medium text-gray-500">Email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    value={editFormData.email}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Date of Birth</label>
+                  <input
+                    name="dob"
+                    type="date"
+                    value={editFormData.dob}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Gender</label>
+                  <select
+                    name="gender"
+                    value={editFormData.gender}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  >
+                    <option value="">Choose...</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Subject</label>
+                  <input
+                    name="subject"
+                    value={editFormData.subject}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="text-xs font-medium text-gray-500">Address</label>
+                  <input
+                    name="address"
+                    value={editFormData.address}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Account Credentials Section */}
+              <div className="border-t border-gray-100 pt-3 mt-3">
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">Account Credentials</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-medium text-gray-500">Username</label>
+                    <input
+                      name="username"
+                      value={editFormData.username}
+                      onChange={handleEditChange}
+                      className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-500">New Password</label>
+                    <input
+                      name="password"
+                      type="password"
+                      value={editFormData.password}
+                      onChange={handleEditChange}
+                      placeholder="Leave blank to keep current"
+                      className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setOpenEditModal(false)}
+                  className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-4 py-2 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50"
+                >
+                  {saving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
