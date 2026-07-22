@@ -5,13 +5,29 @@ import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 
 export default function Students() {
-    const auth = useAuth();
+  const auth = useAuth();
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [classFilter, setClassFilter] = useState("");
   const [classes, setClasses] = useState([]);
   const navigate = useNavigate();
+
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [editFormData, setEditFormData] = useState({
+    firstName: "",
+    lastName: "",
+    grade: "",
+    telephoneNumber: "",
+    email: "",
+    birthday: "",
+    gender: "",
+    address: "",
+    username: "",
+    password: "",
+  });
+  const [saving, setSaving] = useState(false);
 
   // Fetch data
   useEffect(() => {
@@ -44,6 +60,7 @@ export default function Students() {
           classId: null,
           status: "Active",
           photo: null,
+          username: s.user?.username || "",
         }));
 
         setStudents(transformedStudents);
@@ -69,7 +86,72 @@ export default function Students() {
     if (auth.token) { // Only fetch if token exists
       fetchData();
     }
-  }, [auth.token]); 
+  }, [auth.token]);
+
+
+  const handleEditClick = (student) => {
+    const [firstName, ...rest] = student.fullName.split(" ");
+    setSelectedStudent(student);
+    setEditFormData({
+      firstName: firstName || "",
+      lastName: rest.join(" ") || "",
+      grade: student.grade || "",
+      telephoneNumber: student.phone || "",
+      email: student.email || "",
+      birthday: student.dateOfBirth || "",
+      gender: student.gender || "",
+      address: student.address || "",
+      username: student.username || "",
+      password: "",
+    });
+    setOpenEditModal(true);
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    if (!selectedStudent) return;
+    setSaving(true);
+    try {
+      await axios.put(
+        `http://localhost:8081/api/students/edit/${selectedStudent.id}`,
+        editFormData,
+        { headers: { Authorization: `Bearer ${auth.token}` } }
+      );
+
+      // Update the row locally so the table reflects changes immediately
+      setStudents((prev) =>
+        prev.map((s) =>
+          s.id === selectedStudent.id
+            ? {
+              ...s,
+              fullName: `${editFormData.firstName} ${editFormData.lastName}`.trim(),
+              grade: editFormData.grade,
+              phone: editFormData.telephoneNumber,
+              email: editFormData.email,
+              address: editFormData.address,
+              dateOfBirth: editFormData.birthday,
+              gender: editFormData.gender,
+              username: editFormData.username || s.username,
+            }
+            : s
+        )
+      );
+
+      setOpenEditModal(false);
+      setSelectedStudent(null);
+    } catch (err) {
+      console.error("Error updating student:", err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+
 
   // Filter students
   const filteredStudents = students.filter((student) => {
@@ -235,7 +317,7 @@ export default function Students() {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          navigate(`/dashboard/admin/students/${student.id}/edit`);
+                          handleEditClick(student);
                         }}
                         className="p-1.5 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg"
                       >
@@ -258,6 +340,155 @@ export default function Students() {
           </tbody>
         </table>
       </div>
+
+
+      {/* Edit Student Modal */}
+      {openEditModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          onClick={() => setOpenEditModal(false)}
+        >
+          <div
+            className="bg-white rounded-xl w-full max-w-lg p-6 space-y-4 shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">Edit Student</h2>
+              <p className="text-sm text-gray-500">
+                Update {selectedStudent?.fullName}'s details
+              </p>
+            </div>
+
+            <form onSubmit={handleEditSubmit} className="space-y-3">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium text-gray-500">First Name</label>
+                  <input
+                    name="firstName"
+                    value={editFormData.firstName}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Last Name</label>
+                  <input
+                    name="lastName"
+                    value={editFormData.lastName}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Grade</label>
+                  <input
+                    name="grade"
+                    value={editFormData.grade}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Phone</label>
+                  <input
+                    name="telephoneNumber"
+                    value={editFormData.telephoneNumber}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="text-xs font-medium text-gray-500">Email</label>
+                  <input
+                    name="email"
+                    type="email"
+                    value={editFormData.email}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Birthday</label>
+                  <input
+                    name="birthday"
+                    type="date"
+                    value={editFormData.birthday}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-500">Gender</label>
+                  <select
+                    name="gender"
+                    value={editFormData.gender}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  >
+                    <option value="">Choose...</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div className="col-span-2">
+                  <label className="text-xs font-medium text-gray-500">Address</label>
+                  <input
+                    name="address"
+                    value={editFormData.address}
+                    onChange={handleEditChange}
+                    className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                  />
+                </div>
+              </div>
+
+              {/* Account Credentials Section */}
+              <div className="border-t border-gray-100 pt-3 mt-3">
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">Account Credentials</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-medium text-gray-500">Username</label>
+                    <input
+                      name="username"
+                      value={editFormData.username}
+                      onChange={handleEditChange}
+                      className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium text-gray-500">New Password</label>
+                    <input
+                      name="password"
+                      type="password"
+                      value={editFormData.password}
+                      onChange={handleEditChange}
+                      placeholder="Leave blank to keep current"
+                      className="w-full mt-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 outline-none"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setOpenEditModal(false)}
+                  className="px-4 py-2 text-sm rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-4 py-2 text-sm rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50"
+                >
+                  {saving ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
